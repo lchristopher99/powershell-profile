@@ -1,19 +1,21 @@
-function RemoveBinObj() {
-    Get-ChildItem .\ -include bin,obj -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse }
-}
-
-function ElevatePwsh() {
-    Start-Process powershell -verb runas -args "/NoExit /c cd $($pwd)"
-}
-
 Set-Alias -Name nv -Value nvim -Option AllScope -Force
+
 Set-Alias -Name unzip -Value Expand-Archive
 Set-Alias -Name zip -Value Compress-Archive
+
+# delete bin and obj 
+function RemoveBinObj() { Get-ChildItem .\ -include bin,obj -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
 Set-Alias -Name clean -Value RemoveBinObj
+
+# switch to admin shell at location
+function ElevatePwsh() { Start-Process powershell -verb runas -args "/NoExit /c cd $($pwd)" }
 Set-Alias -Name sudo -Value ElevatePwsh
+
+# change dir/back dir
 Set-Alias -Name cd -Value pushd -Option AllScope -Force
 Set-Alias -Name bd -Value popd -Option AllScope
 
+# git
 function status { git status $args }
 Set-Alias -Name gs -Value status
 function gdiff { git diff $args }
