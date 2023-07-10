@@ -13,3 +13,16 @@ Set-Alias -Name clean -Value RemoveBinObj
 Set-Alias -Name sudo -Value ElevatePwsh
 Set-Alias -Name cd -Value pushd -Option AllScope -Force
 Set-Alias -Name bd -Value popd -Option AllScope
+
+function status { git status $args }
+Set-Alias -Name gs -Value status
+function gdiff { git diff $args }
+Set-Alias -Name gd -Value gdiff
+function add { git add $args }
+Set-Alias -Name ga -Value add
+function addall { git add . }
+Set-Alias -Name gaa -Value addall
+function commit { git commit -m $args }
+Set-Alias -Name gc -Value commit -Option AllScope -Force 
+function push { git push $args }
+Set-Alias -Name gp -Value push -Option AllScope -Force
