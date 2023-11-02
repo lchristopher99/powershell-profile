@@ -5,10 +5,10 @@ Set-Alias -Name zip -Value Compress-Archive
 
 # delete bin and obj 
 function RemoveBinObj() { Get-ChildItem .\ -include bin,obj -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
-Set-Alias -Name clean -Value RemoveBinObj
+Set-Alias -Name cln -Value RemoveBinObj -Option AllScope -Force
 
 # switch to admin shell at location
-function ElevatePwsh() { Start-Process powershell -verb runas -args "/NoExit /c cd $($pwd)" }
+function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd $($pwd)" }
 Set-Alias -Name sudo -Value ElevatePwsh
 
 # change dir/back dir
@@ -28,3 +28,8 @@ function commit { git commit -m $args }
 Set-Alias -Name gc -Value commit -Option AllScope -Force 
 function push { git push $args }
 Set-Alias -Name gp -Value push -Option AllScope -Force
+
+function run { dotnet run $args }
+Set-Alias -Name dr -Value run
+function build { dotnet build $args }
+Set-Alias -Name db -Value build 
