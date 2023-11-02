@@ -1,3 +1,51 @@
+# check if tools are available, prompt to install
+function fetch_tools {
+    # check for scoop
+    try { scoop *>$null; Write-Host "[+] 'scoop' installed!" }
+    catch { 
+        Write-Host "[!] 'scoop' unavailable, install now? (y/n) " -NoNewLine
+        if ([Console]::ReadKey() -eq 'y') {
+            Write-Host "[*] Installing 'scoop' ..."
+            Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+            irm get.scoop.sh | iex
+        } else { Write-Host }
+    }
+
+    # check for scoop apps
+    try {
+        $apps = @("btop", "gcc", "grep", "neofetch", "ripgrep")
+        foreach ($a in $apps) {
+            if (!(scoop info $a | Where-object {$_.Name -like $a})) {
+                Write-Host "[!] '$a' unavailable, install now? (y/n) " -NoNewLine
+                if ([Console]::ReadKey() -eq 'y') {
+                    Write-Host "[*] Installing '$a' ..."
+                    scoop install $a
+                } else { Write-Host }
+            } else { Write-Host "[+] '$a' installed!" }
+        }
+    }
+    catch {}
+
+    # check for powershell modules
+    $modules = @("PSReadLine", "Terminal-Icons")
+    foreach ($m in $modules) {
+        if (!(get-module -ListAvailable | Where-object {$_.Name -like $m})) {
+            Write-Host "[!] '$m' unavailable, install now? (y/n) " -NoNewLine
+            if ([Console]::ReadKey() -eq 'y') {
+                Write-Host "[*] Installing '$m' ..."
+                Install-Module $m
+                Import-Module $m
+            } else { Write-Host }
+        } 
+        else {
+            Import-Module $m 
+            Write-Host "[+] '$m' installed!"
+        }
+    }
+}
+
+Set-Alias -Name fetch -Value fetch_tools
+
 Set-Alias -Name nv -Value nvim -Option AllScope -Force
 
 Set-Alias -Name unzip -Value Expand-Archive

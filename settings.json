@@ -32,10 +32,7 @@
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-    "initialCols": 130,
-    "initialPosition": "100,50",
-    "initialRows": 52,
-    "launchMode": "default",
+    "focusFollowMouse": false,
     "newTabMenu": 
     [
         {
@@ -44,69 +41,33 @@
     ],
     "profiles": 
     {
-        "defaults": 
-        {
-            "opacity": 95
-        },
+        "defaults": {},
         "list": 
         [
             {
-                "font": 
-                {
-                    "face": "Hack Nerd Font"
-                },
-                "guid": "{2484948d-136c-5ae9-b489-600eb6b990d5}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "commandline": "powershell.exe -NoExit -Command \"&{Import-Module \"\"\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll\"\"\"; Enter-VsDevShell a1ffb6f9 -SkipAutomaticLocation -DevCmdArguments \"\"\"-arch=x64 -host_arch=x64\"\"\"}\"",
-                "elevate": false,
+                "colorScheme": "Campbell",
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "font": 
                 {
                     "face": "Hack Nerd Font Mono"
                 },
-                "guid": "{476ee34c-7fa7-5585-86e7-584841154727}",
-                "hidden": false,
-                "name": "Developer PowerShell for VS 2022",
-                "opacity": 90,
-                "source": "Windows.Terminal.VisualStudio",
-                "startingDirectory": "C:\\Users\\logan"
-            },
-            {
-                "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
-                "hidden": false,
-                "name": "Ubuntu",
-                "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
-            },
-            {
-                "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
-                "hidden": true,
-                "name": "Visual Studio Debug Console",
-                "source": "VSDebugConsole"
-            },
-            {
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
-                "name": "Windows PowerShell"
+                "name": "Windows PowerShell",
+                "opacity": 80,
+                "useAcrylic": false
             },
             {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
                 "name": "Command Prompt"
             },
             {
-                "commandline": "powershell.exe -NoExit -Command \"&{Import-Module \"\"\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll\"\"\"; Enter-VsDevShell a1ffb6f9 -SkipAutomaticLocation -DevCmdArguments \"\"\"-arch=x64 -host_arch=x64\"\"\"}\"",
-                "font": 
-                {
-                    "face": "Hack Nerd Font"
-                },
-                "guid": "{650988c6-174a-40f0-9dc9-fa25e7ad9809}",
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
                 "hidden": false,
-                "icon": "C:\\Users\\logan\\Pictures\\mf.jpg",
-                "name": "MartinFed",
-                "startingDirectory": "G:\\My Drive\\martinfed"
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
             },
             {
                 "guid": "{46ca431a-3a87-5fb3-83cd-11ececc031d2}",
@@ -115,12 +76,30 @@
                 "source": "Windows.Terminal.Wsl"
             },
             {
+                "guid": "{fbc32cbb-4d5b-5eb3-a60c-8744f5561e14}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{2a625a93-1e7d-5ff3-9064-d4f449e0e10a}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
+                "hidden": true,
+                "name": "Visual Studio Debug Console",
+                "source": "VSDebugConsole"
+            },
+            {
                 "colorScheme": "Tango Dark",
                 "cursorShape": "filledBox",
                 "font": 
                 {
                     "face": "Hack Nerd Font Mono",
-                    "size": 15.0
+                    "size": 13.0
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
@@ -272,7 +251,7 @@
             "yellow": "#B58900"
         },
         {
-            "background": "#000A14",
+            "background": "#000000",
             "black": "#000000",
             "blue": "#3465A4",
             "brightBlack": "#555753",
