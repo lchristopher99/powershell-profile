@@ -35,12 +35,11 @@ function build { dotnet build $args }
 Set-Alias -Name db -Value build 
 
 function procloc { 
-    if ((Test-Path -Path $FileOrFolderPath) -eq $false) {
+    if ((Test-Path -Path $args) -eq $false) {
         Write-Warning "File or directory does not exist."
     } else {
         $LockingProcess = CMD /C "openfiles /query /fo table | find /I ""$FileOrFolderPath"""
-        Write-Host $LockingProcess
+            Write-Host $LockingProcess
     } 
 }
-Set-Alias -Name procloc -Value procloc
-Set-Alias -Name pc -Value procloc
+Set-Alias -Name pl -Value procloc
