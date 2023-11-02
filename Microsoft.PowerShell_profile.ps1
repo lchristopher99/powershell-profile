@@ -51,11 +51,11 @@ Set-Alias -Name nv -Value nvim -Option AllScope -Force
 Set-Alias -Name unzip -Value Expand-Archive
 Set-Alias -Name zip -Value Compress-Archive
 
-# delete bin and obj 
-function RemoveBinObj() { Get-ChildItem .\ -include bin,obj -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
+# delete bin, obj, .vs, .vscode, Properties, and deploy directories
+function RemoveBinObj() { Get-ChildItem .\ -include bin,obj,.vs,.vscode,Properties,deploy -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
 Set-Alias -Name cln -Value RemoveBinObj -Option AllScope -Force
 
-# switch to admin shell at location
+# switch to admin shell at location, pass args
 function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd $($pwd);$args" }
 Set-Alias -Name sudo -Value ElevatePwsh
 
