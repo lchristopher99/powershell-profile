@@ -8,7 +8,7 @@ function RemoveBinObj() { Get-ChildItem .\ -include bin,obj -Recurse | ForEach-O
 Set-Alias -Name cln -Value RemoveBinObj -Option AllScope -Force
 
 # switch to admin shell at location
-function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd $($pwd)" }
+function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd $($pwd);$args" }
 Set-Alias -Name sudo -Value ElevatePwsh
 
 # change dir/back dir
@@ -34,12 +34,13 @@ Set-Alias -Name dr -Value run
 function build { dotnet build $args }
 Set-Alias -Name db -Value build 
 
+# find what process has a hold of a directory/file
 function procloc { 
     if ((Test-Path -Path $args) -eq $false) {
         Write-Warning "File or directory does not exist."
     } else {
-        $LockingProcess = CMD /C "openfiles /query /fo table | find /I ""$FileOrFolderPath"""
-            Write-Host $LockingProcess
+        $LockingProcess = pwsh /c "openfiles /query /fo table | grep -i '$args'"
+        Write-Host $LockingProcess
     } 
 }
 Set-Alias -Name pl -Value procloc
