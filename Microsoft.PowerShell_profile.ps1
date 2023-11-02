@@ -29,6 +29,7 @@ Set-Alias -Name gc -Value commit -Option AllScope -Force
 function push { git push $args }
 Set-Alias -Name gp -Value push -Option AllScope -Force
 
+# dotnet
 function run { dotnet run $args }
 Set-Alias -Name dr -Value run
 function build { dotnet build $args }
