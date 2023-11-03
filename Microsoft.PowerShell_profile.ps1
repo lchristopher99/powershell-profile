@@ -80,14 +80,3 @@ function run { dotnet run $args }
 Set-Alias -Name dr -Value run
 function build { dotnet build $args }
 Set-Alias -Name db -Value build 
-
-# find what process has a hold of a directory/file
-function procloc { 
-    if ((Test-Path -Path $args) -eq $false) {
-        Write-Warning "File or directory does not exist."
-    } else {
-        $LockingProcess = pwsh /c "openfiles /query /fo table | grep -i '$args'"
-        Write-Host $LockingProcess
-    } 
-}
-Set-Alias -Name pl -Value procloc
