@@ -6,6 +6,7 @@ function fetch_tools {
 
     # check for scoop install 
     Write-Host "[*] Checking scoop apps ..."
+    $avail=$true
     try { scoop *>$null }
     catch { 
         Write-Host "[!] 'scoop' unavailable, install now? (y/n) " -NoNewLine
@@ -15,18 +16,20 @@ function fetch_tools {
             irm get.scoop.sh | iex
             scoop bucket add main
             scoop bucket add extras
-        } else { Write-Host }
+        } else { Write-Host; $avail=$false }
     }
 
     # check for scoop apps
-    foreach ($a in $scoop_apps) {
-        if (!(scoop info $a | Where-object {$_.Name -like $a})) {
-            Write-Host "[!] '$a' unavailable, install now? (y/n) " -NoNewLine
-            if ([Console]::ReadKey() -eq 'y') {
-                Write-Host "[*] Installing '$a' ..."
-                scoop install $a
-            } else { Write-Host }
-        } else { Write-Host "[+] '$a' installed!" }
+    if ($avail) {
+        foreach ($a in $scoop_apps) {
+            if (!(scoop info $a | Where-object {$_.Name -like $a})) {
+                Write-Host "[!] '$a' unavailable, install now? (y/n) " -NoNewLine
+                if ([Console]::ReadKey() -eq 'y') {
+                    Write-Host "[*] Installing '$a' ..."
+                    scoop install $a
+                } else { Write-Host }
+            } else { Write-Host "[+] '$a' installed!" }
+        }
     }
 
     # check for winget packages
