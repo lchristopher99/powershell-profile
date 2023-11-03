@@ -1,8 +1,14 @@
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/zash.omp.json" | Invoke-Expression
+
+Import-Module Terminal-Icons
+
 # check if tools are available, prompt to install
 function fetch_tools {
-    $scoop_apps      = @("btop", "gcc", "grep", "neofetch", "ripgrep", "processhacker")
-    $winget_packages = @("Microsoft.PowerToys", "WiresharkFoundation.Wireshark", "Neovim.Neovim", "Git.Git")
+    $scoop_apps      = @("btop", "gcc", "grep", "neofetch", "ripgrep", "processhacker", "lsd")
     $pwsh_modules    = @("PSReadLine", "Terminal-Icons")
+    $winget_packages = @("Neovim.Neovim", "Git.Git", "Microsoft.DotNet.SDK.7", "Microsoft.PowerShell", 
+                         "Microsoft.WindowsTerminal", "JanDeDobbeleer.OhMyPosh", "Brave.Brave", "Insecure.Nmap", 
+                         "rcmaehl.MSEdgeRedirect", "Microsoft.PowerToys", "WiresharkFoundation.Wireshark")
 
     # check for scoop install 
     Write-Host "[*] Checking scoop apps ..."
@@ -13,9 +19,11 @@ function fetch_tools {
         if ([Console]::ReadKey() -eq 'y') {
             Write-Host "[*] Installing 'scoop' ..."
             Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-            irm get.scoop.sh | iex
+            Invoke-RestMethod get.scoop.sh | Invoke-Expression 
             scoop bucket add main
             scoop bucket add extras
+            # reload path
+            $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
         } else { Write-Host; $avail=$false }
     }
 
@@ -31,35 +39,39 @@ function fetch_tools {
             } else { Write-Host "[+] '$a' installed!" }
         }
     }
+    
+    # check for powershell modules
+    Write-Host "`n[*] Checking powershell modules ..."
+    foreach ($m in $pwsh_modules) {
+        if (!(get-module -ListAvailable | Where-object {$_.Name -like $m})) {
+            Write-Host "[!] '$m' unavailable, install now? (y/n) " -NoNewLine
+                if ([Console]::ReadKey() -eq 'y') {
+                    Write-Host "[*] Installing '$m' ..."
+                        Install-Module $m
+                        Import-Module $m
+                } else { Write-Host }
+        } else { Write-Host "[+] '$m' installed!" }
+    }
 
     # check for winget packages
     Write-Host "`n[*] Checking winget packages ..."
+    $reload=$false
     foreach ($p in $winget_packages) {
         if ([String]::IsNullOrEmpty((winget show $p | grep $p))) {
             Write-Host "[!] '$p' unavailable, install now? (y/n) " -NoNewLine
             if ([Console]::ReadKey() -eq 'y') {
                 Write-Host "[*] Installing '$p' ..."
                 winget install $p
+                $reload=$true
             } else { Write-Host }
         } else { Write-Host "[+] '$p' installed!" }
     }
  
-    # check for powershell modules
-    Write-Host "`n[*] Checking powershell modules ..."
-    foreach ($m in $pwsh_modules) {
-        if (!(get-module -ListAvailable | Where-object {$_.Name -like $m})) {
-            Write-Host "[!] '$m' unavailable, install now? (y/n) " -NoNewLine
-            if ([Console]::ReadKey() -eq 'y') {
-                Write-Host "[*] Installing '$m' ..."
-                Install-Module $m
-                Import-Module $m
-            } else { Write-Host }
-        } else { Write-Host "[+] '$m' installed!" }
-    }
+    Write-Host "`n[*] Reloading path ... "
+    if ($reload) { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") }
+ 
+    Write-Host "[+] Done"
 }
-
-Import-Module Terminal-Icons
-
 Set-Alias -Name fetch -Value fetch_tools
 
 Set-Alias -Name nv -Value nvim -Option AllScope -Force
@@ -67,12 +79,30 @@ Set-Alias -Name nv -Value nvim -Option AllScope -Force
 Set-Alias -Name unzip -Value Expand-Archive
 Set-Alias -Name zip -Value Compress-Archive
 
+function tree_long { 
+    $path=$args
+    if ([String]::IsNullOrEmpty(($path))) { $path = "." }
+    Write-Host "`nDirectory: $(Resolve-Path $path)`n"
+    lsd -X --tree --blocks permission,date,size,git,name $args
+    Write-Host
+}
+Set-Alias -Name tl -Value tree_long
+
+function tree { 
+    $path=$args
+    if ([String]::IsNullOrEmpty(($path))) { $path = "." }
+    Write-Host "`nDirectory: $(Resolve-Path $path)`n"
+    lsd -X --tree $args 
+    Write-Host
+}
+Set-Alias -Name tr -Value tree
+
 # delete bin, obj, .vs, .vscode, Properties, and deploy directories
 function RemoveBinObj() { Get-ChildItem .\ -include bin,obj,.vs,.vscode,Properties,deploy -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
 Set-Alias -Name cln -Value RemoveBinObj -Option AllScope -Force
 
 # switch to admin shell at location, pass args
-function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd $($pwd);$args" }
+function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd '$($pwd)';$args" }
 Set-Alias -Name sudo -Value ElevatePwsh
 
 # change dir/back dir
