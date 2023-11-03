@@ -36,13 +36,11 @@ function fetch_tools {
                 Install-Module $m
                 Import-Module $m
             } else { Write-Host }
-        } 
-        else {
-            Import-Module $m 
-            Write-Host "[+] '$m' installed!"
-        }
+        } else { Write-Host "[+] '$m' installed!" }
     }
 }
+
+Import-Module Terminal-Icons
 
 Set-Alias -Name fetch -Value fetch_tools
 
