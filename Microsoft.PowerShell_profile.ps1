@@ -1,34 +1,49 @@
 # check if tools are available, prompt to install
 function fetch_tools {
-    # check for scoop
-    try { scoop *>$null; Write-Host "[+] 'scoop' installed!" }
+    $scoop_apps      = @("btop", "gcc", "grep", "neofetch", "ripgrep", "processhacker")
+    $winget_packages = @("Microsoft.PowerToys", "WiresharkFoundation.Wireshark", "Neovim.Neovim", "Git.Git")
+    $pwsh_modules    = @("PSReadLine", "Terminal-Icons")
+
+    # check for scoop install 
+    Write-Host "[*] Checking scoop apps ..."
+    try { scoop *>$null }
     catch { 
         Write-Host "[!] 'scoop' unavailable, install now? (y/n) " -NoNewLine
         if ([Console]::ReadKey() -eq 'y') {
             Write-Host "[*] Installing 'scoop' ..."
             Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
             irm get.scoop.sh | iex
+            scoop bucket add main
+            scoop bucket add extras
         } else { Write-Host }
     }
 
     # check for scoop apps
-    try {
-        $apps = @("btop", "gcc", "grep", "neofetch", "ripgrep")
-        foreach ($a in $apps) {
-            if (!(scoop info $a | Where-object {$_.Name -like $a})) {
-                Write-Host "[!] '$a' unavailable, install now? (y/n) " -NoNewLine
-                if ([Console]::ReadKey() -eq 'y') {
-                    Write-Host "[*] Installing '$a' ..."
-                    scoop install $a
-                } else { Write-Host }
-            } else { Write-Host "[+] '$a' installed!" }
-        }
+    foreach ($a in $scoop_apps) {
+        if (!(scoop info $a | Where-object {$_.Name -like $a})) {
+            Write-Host "[!] '$a' unavailable, install now? (y/n) " -NoNewLine
+            if ([Console]::ReadKey() -eq 'y') {
+                Write-Host "[*] Installing '$a' ..."
+                scoop install $a
+            } else { Write-Host }
+        } else { Write-Host "[+] '$a' installed!" }
     }
-    catch {}
 
+    # check for winget packages
+    Write-Host "`n[*] Checking winget packages ..."
+    foreach ($p in $winget_packages) {
+        if ([String]::IsNullOrEmpty((winget show $p | grep $p))) {
+            Write-Host "[!] '$p' unavailable, install now? (y/n) " -NoNewLine
+            if ([Console]::ReadKey() -eq 'y') {
+                Write-Host "[*] Installing '$p' ..."
+                winget install $p
+            } else { Write-Host }
+        } else { Write-Host "[+] '$p' installed!" }
+    }
+ 
     # check for powershell modules
-    $modules = @("PSReadLine", "Terminal-Icons")
-    foreach ($m in $modules) {
+    Write-Host "`n[*] Checking powershell modules ..."
+    foreach ($m in $pwsh_modules) {
         if (!(get-module -ListAvailable | Where-object {$_.Name -like $m})) {
             Write-Host "[!] '$m' unavailable, install now? (y/n) " -NoNewLine
             if ([Console]::ReadKey() -eq 'y') {
