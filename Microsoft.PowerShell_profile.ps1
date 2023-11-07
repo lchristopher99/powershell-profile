@@ -67,8 +67,10 @@ function fetch {
         } else { Write-Host "[+] '$p' installed!" }
     }
  
-    Write-Host "`n[*] Reloading path ... "
-    if ($reload) { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") }
+    if ($reload) { 
+        Write-Host "`n[*] Reloading path ... "
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+    }
  
     Write-Host "[+] Done"
 }
