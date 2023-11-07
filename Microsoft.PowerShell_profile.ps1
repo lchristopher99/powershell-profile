@@ -3,7 +3,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/zash.omp.json" | Invoke-Exp
 Import-Module Terminal-Icons
 
 # check if tools are available, prompt to install
-function fetch_tools {
+function fetch {
     $scoop_apps      = @("btop", "gcc", "grep", "neofetch", "ripgrep", "processhacker", "lsd")
     $pwsh_modules    = @("PSReadLine", "Terminal-Icons")
     $winget_packages = @("Neovim.Neovim", "Git.Git", "Microsoft.DotNet.SDK.7", "Microsoft.PowerShell", 
@@ -72,59 +72,48 @@ function fetch_tools {
  
     Write-Host "[+] Done"
 }
-Set-Alias -Name fetch -Value fetch_tools
 
-Set-Alias -Name nv -Value nvim -Option AllScope -Force
-
-Set-Alias -Name unzip -Value Expand-Archive
-Set-Alias -Name zip -Value Compress-Archive
-
-function tree_long { 
+function trl { 
     $path=$args
     if ([String]::IsNullOrEmpty(($path))) { $path = "." }
     Write-Host "`nDirectory: $(Resolve-Path $path)`n"
     lsd -X --tree --blocks permission,date,size,git,name $args
     Write-Host
 }
-Set-Alias -Name tl -Value tree_long
 
-function tree { 
+function tr { 
     $path=$args
     if ([String]::IsNullOrEmpty(($path))) { $path = "." }
     Write-Host "`nDirectory: $(Resolve-Path $path)`n"
     lsd -X --tree $args 
     Write-Host
 }
-Set-Alias -Name tr -Value tree
 
 # delete bin, obj, .vs, .vscode, Properties, and deploy directories
-function RemoveBinObj() { Get-ChildItem .\ -include bin,obj,.vs,.vscode,Properties,deploy -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
-Set-Alias -Name cln -Value RemoveBinObj -Option AllScope -Force
+function cln { Get-ChildItem .\ -include bin,obj,.vs,.vscode,Properties,deploy -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse } }
 
 # switch to admin shell at location, pass args
-function ElevatePwsh() { Start-Process pwsh -verb runas -args "/NoExit /c cd '$($pwd)';$args" }
-Set-Alias -Name sudo -Value ElevatePwsh
+function sudo { Start-Process pwsh -verb runas -args "/NoExit /c cd '$($pwd)';$args" }
+
+# git
+function gs     { git status $args }
+function gd     { git diff $args }
+function ga     { git add $args }
+function gaa    { git add . }
+function commit { git commit -m $args } 
+function push   { git push $args } 
+Set-Alias -Name gc -Value commit -Option AllScope -Force
+Set-Alias -Name gp -Value push -Option AllScope -Force
+
+# dotnet
+function dr { dotnet run $args }
+function db { dotnet build $args }
+
+Set-Alias -Name nv -Value nvim -Option AllScope -Force
+
+Set-Alias -Name unzip -Value Expand-Archive
+Set-Alias -Name zip -Value Compress-Archive
 
 # change dir/back dir
 Set-Alias -Name cd -Value pushd -Option AllScope -Force
 Set-Alias -Name bd -Value popd -Option AllScope
-
-# git
-function status { git status $args }
-Set-Alias -Name gs -Value status
-function gdiff { git diff $args }
-Set-Alias -Name gd -Value gdiff
-function add { git add $args }
-Set-Alias -Name ga -Value add
-function addall { git add . }
-Set-Alias -Name gaa -Value addall
-function commit { git commit -m $args }
-Set-Alias -Name gc -Value commit -Option AllScope -Force 
-function push { git push $args }
-Set-Alias -Name gp -Value push -Option AllScope -Force
-
-# dotnet
-function run { dotnet run $args }
-Set-Alias -Name dr -Value run
-function build { dotnet build $args }
-Set-Alias -Name db -Value build 
