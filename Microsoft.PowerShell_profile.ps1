@@ -30,7 +30,7 @@ function fetch {
     # check for scoop apps
     if ($avail) {
         foreach ($a in $scoop_apps) {
-            if (!(scoop info $a | Where-object {$_.Name -like $a})) {
+            if (!(scoop list | Where-object {$_.Name -like $a})) {
                 Write-Host "[!] '$a' unavailable, install now? (y/n) " -NoNewLine
                 if ([Console]::ReadKey() -eq 'y') {
                     Write-Host "[*] Installing '$a' ..."
@@ -98,6 +98,7 @@ function cln { Get-ChildItem .\ -include bin,obj,.vs,.vscode,Properties,deploy -
 function sudo { Start-Process pwsh -verb runas -args "/NoExit /c cd '$($pwd)';$args" }
 
 # git
+function gsm    { git submodule $args }
 function gs     { git status $args }
 function gd     { git diff $args }
 function ga     { git add $args }
@@ -110,6 +111,8 @@ Set-Alias -Name gp -Value push -Option AllScope -Force
 # dotnet
 function dr { dotnet run $args }
 function db { dotnet build $args }
+function dp { dotnet pack $args }
+function dnp { dotnet nuget push $args }
 
 Set-Alias -Name nv -Value nvim -Option AllScope -Force
 
