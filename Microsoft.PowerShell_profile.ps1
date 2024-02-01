@@ -122,3 +122,6 @@ Set-Alias -Name zip -Value Compress-Archive
 # change dir/back dir
 Set-Alias -Name cd -Value pushd -Option AllScope -Force
 Set-Alias -Name bd -Value popd -Option AllScope
+
+# code count
+function cc { Get-ChildItem -Filter $($args) -Recurse | Get-Content | Measure-Object -line -word -char }
