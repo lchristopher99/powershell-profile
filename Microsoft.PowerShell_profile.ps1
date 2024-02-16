@@ -98,6 +98,7 @@ function cln { Get-ChildItem .\ -include bin,obj,.vs,.vscode,Properties,deploy -
 function sudo { Start-Process pwsh -verb runas -args "/NoExit /c cd '$($pwd)';$args" }
 
 # git
+function guc    { git reset --soft HEAD~ }
 function gsm    { git submodule $args }
 function gs     { git status $args }
 function gd     { git diff $args }
@@ -111,8 +112,7 @@ Set-Alias -Name gp -Value push -Option AllScope -Force
 # dotnet
 function dr { dotnet run $args }
 function db { dotnet build $args }
-function dp { dotnet pack $args }
-function dnp { dotnet nuget push $args }
+function dp { dotnet publish $args }
 
 Set-Alias -Name nv -Value nvim -Option AllScope -Force
 
